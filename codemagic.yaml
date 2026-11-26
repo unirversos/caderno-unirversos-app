@@ -1,0 +1,80 @@
+# Codemagic CI/CD — Caderno Unirversos (iOS App Store & Android Google Play)
+# Permite compilar e assinar o app iOS (.ipa) na nuvem (macOS) sem precisar de um Mac local.
+# Documentação: https://docs.codemagic.io/yaml-quick-start/building-a-capacitor-app/
+
+workflows:
+  ios-release:
+    name: iOS Release (App Store / TestFlight)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    integrations:
+      app_store_connect: codemagic
+    environment:
+      ios_signing:
+        distribution_type: app_store
+        bundle_identifier: com.unirversos.caderno
+      vars:
+        XCODE_WORKSPACE: "ios/App/App.xcworkspace"
+        XCODE_SCHEME: "App"
+        BUNDLE_ID: "com.unirversos.caderno"
+      node: 20
+      xcode: latest
+      cocoapods: default
+    scripts:
+      - name: Instalar dependências Node
+        script: npm ci
+      - name: Sincronizar Capacitor iOS
+        script: npx cap sync ios
+      - name: Instalar CocoaPods
+        script: |
+          cd ios/App
+          pod install
+      - name: Configurar assinatura do Xcode
+        script: xcode-project use-profiles
+      - name: Incrementar Build Number
+        script: |
+          cd ios/App
+          LATEST_BUILD_NUMBER=$(app-store-connect get-latest-app-store-build-number "$APP_STORE_APPLE_ID" || echo 0)
+          agvtool new-version -all $(($LATEST_BUILD_NUMBER + 1))
+      - name: Compilar .ipa para App Store
+        script: |
+          xcode-project build-ipa \
+            --workspace "$CM_BUILD_DIR/$XCODE_WORKSPACE" \
+            --scheme "$XCODE_SCHEME"
+    artifacts:
+      - build/ios/ipa/*.ipa
+      - /tmp/xcodebuild_logs/*.log
+    publishing:
+      app_store_connect:
+        auth: integration
+        submit_to_testflight: true
+        submit_to_app_store: false
+
+  android-release:
+    name: Android Release (Google Play .aab)
+    max_build_duration: 60
+    instance_type: mac_mini_m2
+    environment:
+      android_signing:
+        - caderno_unirversos_keystore
+      groups:
+        - google_play
+      node: 20
+      java: 17
+    scripts:
+      - name: Instalar dependências Node
+        script: npm ci
+      - name: Sincronizar Capacitor Android
+        script: npx cap sync android
+      - name: Compilar Android App Bundle (.aab)
+        script: |
+          cd android
+          ./gradlew bundleRelease
+    artifacts:
+      - android/app/build/outputs/**/*.aab
+      - android/app/build/outputs/**/mapping.txt
+    publishing:
+      google_play:
+        credentials: $GCLOUD_SERVICE_ACCOUNT_CREDENTIALS
+        track: internal
+        submit_as_draft: true

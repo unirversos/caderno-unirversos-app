@@ -1,0 +1,21 @@
+node_modules/
+.DS_Store
+Thumbs.db
+*.log
+
+# Android build outputs
+android/.gradle/
+android/app/build/
+android/build/
+android/local.properties
+android/.idea/
+*.keystore
+*.jks
+
+# iOS build outputs
+ios/DerivedData/
+ios/App/Pods/
+ios/App/build/
+*.ipa
+*.mobileprovision
+*.p12

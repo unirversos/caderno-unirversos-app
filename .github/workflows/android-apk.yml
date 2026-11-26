@@ -1,0 +1,47 @@
+name: Gerar APK Android (Gratuito)
+
+on:
+  push:
+    branches: [ main ]
+  workflow_dispatch:
+
+jobs:
+  build-apk:
+    name: Compilar Caderno-Unirversos.apk
+    runs-on: ubuntu-latest
+
+    steps:
+      - name: Baixar código do repositório
+        uses: actions/checkout@v4
+
+      - name: Configurar Node.js 20
+        uses: actions/setup-node@v4
+        with:
+          node-version: '20'
+          cache: 'npm'
+
+      - name: Configurar Java 17 (Android)
+        uses: actions/setup-java@v4
+        with:
+          distribution: 'temurin'
+          java-version: '17'
+
+      - name: Instalar dependências
+        run: npm ci
+
+      - name: Sincronizar Capacitor Android
+        run: npx cap sync android
+
+      - name: Compilar APK instalável
+        working-directory: android
+        run: |
+          chmod +x gradlew
+          ./gradlew assembleDebug
+          cp app/build/outputs/apk/debug/app-debug.apk ../Caderno-Unirversos.apk
+
+      - name: Disponibilizar APK para download
+        uses: actions/upload-artifact@v4
+        with:
+          name: Caderno-Unirversos-APK
+          path: Caderno-Unirversos.apk
+          retention-days: 90

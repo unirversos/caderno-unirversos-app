@@ -1,0 +1,27 @@
+{
+  "appId": "com.unirversos.caderno",
+  "appName": "Caderno Unirversos",
+  "webDir": "www",
+  "backgroundColor": "#fdf6f4",
+  "ios": {
+    "contentInset": "automatic",
+    "allowsLinkPreview": false,
+    "backgroundColor": "#fdf6f4",
+    "preferredContentMode": "mobile"
+  },
+  "android": {
+    "backgroundColor": "#fdf6f4",
+    "allowMixedContent": false
+  },
+  "plugins": {
+    "SplashScreen": {
+      "launchShowDuration": 900,
+      "backgroundColor": "#fdf6f4",
+      "showSpinner": false
+    },
+    "StatusBar": {
+      "style": "LIGHT",
+      "backgroundColor": "#fdf6f4"
+    }
+  }
+}

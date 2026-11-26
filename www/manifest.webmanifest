@@ -1,0 +1,17 @@
+{
+  "name": "Caderno Unirversos",
+  "short_name": "Caderno",
+  "description": "Caderno de japonês com teclado, caneta, papel de kanji, dicionário com pronúncia e flashcards.",
+  "lang": "pt-BR",
+  "start_url": "/idiomas/caderno/?app=1",
+  "scope": "/idiomas/caderno/",
+  "display": "standalone",
+  "orientation": "any",
+  "background_color": "#fdf6f4",
+  "theme_color": "#3a2b38",
+  "icons": [
+    { "src": "/icones/icone-192.png", "sizes": "192x192", "type": "image/png" },
+    { "src": "/icones/icone-512.png", "sizes": "512x512", "type": "image/png" },
+    { "src": "/icones/icone-maskable-512.png", "sizes": "512x512", "type": "image/png", "purpose": "maskable" }
+  ]
+}

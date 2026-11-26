@@ -1,0 +1,28 @@
+{
+  "name": "caderno-unirversos-app",
+  "version": "1.0.0",
+  "private": true,
+  "description": "Caderno Unirversos — Aplicativo independente de caderno de japonês para iOS (App Store) e Android (Google Play).",
+  "scripts": {
+    "sync:web": "node scripts/sync-web.mjs",
+    "assets:gen": "node scripts/gerar-assets.mjs && npx capacitor-assets generate",
+    "cap:sync": "npm run sync:web && npx cap sync",
+    "cap:ios": "npm run cap:sync && npx cap open ios",
+    "cap:android": "npm run cap:sync && npx cap open android"
+  },
+  "dependencies": {
+    "@capacitor/app": "^6.0.1",
+    "@capacitor/core": "^6.1.2",
+    "@capacitor/filesystem": "^6.0.1",
+    "@capacitor/haptics": "^6.0.1",
+    "@capacitor/share": "^6.0.2",
+    "@capacitor/splash-screen": "^6.0.2",
+    "@capacitor/status-bar": "^6.0.1"
+  },
+  "devDependencies": {
+    "@capacitor/android": "^6.1.2",
+    "@capacitor/assets": "^3.0.5",
+    "@capacitor/cli": "^6.1.2",
+    "@capacitor/ios": "^6.1.2"
+  }
+}

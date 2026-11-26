@@ -1,0 +1,154 @@
+<!DOCTYPE html>
+<html lang="pt-BR">
+<head>
+<meta charset="UTF-8">
+<meta name="viewport" content="width=device-width, initial-scale=1, viewport-fit=cover">
+<title>Caderno Unirversos</title>
+<style>
+:root{
+  --paper:#fdf6f4; --card:#ffffff; --ink:#3a2b38; --muted:#705f6c; --line:#ecdadd;
+  --blush:#f8dde1; --pink:#c23f5e; --sage:#517158; --sage-soft:#e8efe8; --lavender:#b7a6dc;
+  --f-display:"Baloo 2", "Zen Maru Gothic", system-ui, sans-serif;
+  --f-body:"Zen Maru Gothic", "Hiragino Maru Gothic ProN", "Noto Sans JP", system-ui, sans-serif;
+  --r:18px;
+}
+*{box-sizing:border-box}
+[hidden]{display:none!important}
+body{margin:0;background:var(--paper);color:var(--ink);font-family:var(--f-body);font-size:15px;line-height:1.6;
+  background-image:radial-gradient(var(--line) 1.2px,transparent 1.3px);background-size:22px 22px;
+  padding-left:max(16px,env(safe-area-inset-left,0px));padding-right:max(16px,env(safe-area-inset-right,0px));
+  padding-top:max(20px,env(safe-area-inset-top,0px));padding-bottom:max(48px,env(safe-area-inset-bottom,0px))}
+.wrap{max-width:1000px;margin:0 auto;display:grid;gap:18px}
+a{color:inherit}
+h1{font-family:var(--f-display);font-weight:800;font-size:clamp(24px,5vw,34px);line-height:1.15;margin:0}
+.sub{margin:4px 0 0;color:var(--muted);font-size:14px}
+.sitebar{display:flex;align-items:center;justify-content:space-between;gap:10px 14px;flex-wrap:wrap}
+.sitebar .brand{font-family:"Baloo 2",system-ui,sans-serif;font-size:18px;font-weight:700;text-decoration:none;color:var(--ink)}
+.sitebar .brand span{color:var(--pink)}
+.sitebar .navlinks{display:flex;flex-wrap:wrap;gap:14px;font-size:13px}
+.sitebar .navlinks a{color:var(--muted);text-decoration:none}
+.sitebar .navlinks a:hover{color:var(--pink)}
+.trail{display:flex;gap:8px;overflow-x:auto;padding-bottom:2px;scrollbar-width:thin}
+.trail a{flex:0 0 auto;display:inline-flex;align-items:center;gap:6px;border:1.5px solid var(--line);background:var(--card);border-radius:99px;padding:6px 14px;font-size:13.5px;font-weight:700;text-decoration:none;color:var(--ink)}
+.trail a:hover{border-color:var(--pink)}
+.trail a[aria-current="page"]{background:var(--ink);border-color:var(--ink);color:var(--paper)}
+.top-hd{display:flex;align-items:flex-start;justify-content:space-between;gap:12px;flex-wrap:wrap}
+.top-acts{display:flex;align-items:center;gap:8px;flex-wrap:wrap}
+.top-bt{font:inherit;font-size:14px;font-weight:700;border:1.5px solid var(--line);background:var(--card);color:inherit;border-radius:99px;padding:8px 16px;min-height:40px;cursor:pointer;display:inline-flex;align-items:center;gap:6px}
+.top-bt:hover{border-color:var(--pink)}
+.top-bt:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
+@media (max-width:480px){.top-bt{padding:8px 12px;font-size:13px}}
+/* Modo App (Standalone PWA / App Store / ?app=1): remove barras do site para parecer app nativo */
+body.modo-app .sitebar,body.modo-app .trail,body.modo-app #recolher,body.modo-app #bz-aba,body.modo-app #bz-p{display:none!important}
+body.modo-app .sub{display:none}
+body.modo-app{padding-top:max(14px,env(safe-area-inset-top,0px))}
+/* dicionário sanfonado e painel de dados */
+#dicbox,#cfgbox{display:grid;grid-template-rows:0fr;margin:0;transition:grid-template-rows .28s ease,margin .28s ease;visibility:hidden}
+#dicbox.on,#cfgbox.on{grid-template-rows:1fr;margin:0 0 14px;visibility:visible}
+#dicbox .dicin,#cfgbox .dicin{overflow:hidden;min-height:0;background:#fff;border:0 solid #ecdadd;border-radius:18px;padding:0 14px;transition:padding .28s ease}
+#dicbox.on .dicin,#cfgbox.on .dicin{border-width:1.5px;padding:14px}
+.cfg-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
+.cfg-msg{font-size:13px;color:var(--sage);font-weight:700;margin:8px 0 0}
+@media (prefers-reduced-motion:reduce){#dicbox,#dicbox .dicin,#cfgbox,#cfgbox .dicin{transition:none}}
+</style>
+<link rel="stylesheet" href="./estilo-celular.css">
+
+<link rel="icon" href="./favicon.svg" type="image/svg+xml"><link rel="apple-touch-icon" href="./apple-touch-icon.png"><link rel="manifest" href="./manifest.webmanifest"><meta name="theme-color" content="#3a2b38"><meta name="mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-capable" content="yes"><meta name="apple-mobile-web-app-title" content="Caderno"><style id="uni-logo">.logo,.brand,.sitebar .brand{font-family:"Baloo 2","Zen Maru Gothic",system-ui,sans-serif!important;font-weight:800!important;font-size:19px!important;letter-spacing:.14em!important;text-transform:none!important;text-decoration:none!important}.logo span,.brand span{color:#c23f5e!important;font:inherit!important;letter-spacing:inherit!important;margin:0!important}</style>
+<style id="app-nativo-css">body.app-nativo #modo-app-bt,body.app-nativo [data-a="entrar"]{display:none!important}</style>
+</head>
+<body class="modo-app app-nativo">
+<script>
+/* Ativa o Modo App automaticamente se estiver instalado (PWA/Capacitor) ou aberto com ?app=1 */
+(function(){
+  var q=new URLSearchParams(location.search);
+  var ehApp=q.get('app')==='1'||(window.matchMedia&&matchMedia('(display-mode: standalone)').matches)||navigator.standalone===true||!!window.Capacitor;
+  if(ehApp)document.body.classList.add('modo-app');
+})();
+</script>
+<div class="wrap">
+  <nav class="sitebar" aria-label="Site"><a class="brand" href="/">UNI<span>R</span>VERSOS</a><span class="navlinks"><a href="/idiomas/">idiomas</a><a href="/travessia/">travessia</a><a href="/loja/">tesouros</a><span class="nav-sep" aria-hidden="true" style="opacity:.3">|</span><a href="/paralelos/">paralelos</a><a href="/sobre/">sobre</a></span></nav>
+  <nav class="trail" aria-label="Trilha"><a href="/idiomas/japones/">← Minha trilha</a></nav>
+  <header class="top-hd">
+    <div>
+      <h1>Caderno de Unir Versos</h1>
+      <p class="sub">Anotações livres, em páginas: escreva com o teclado e desenhe com a caneta por cima. Funciona offline e sincroniza com a sua conta.</p>
+    </div>
+    <div class="top-acts">
+      <button type="button" id="dicbt" class="top-bt" aria-expanded="false" aria-controls="dicbox">📖 Dicionário</button>
+      <button type="button" id="cfgbt" class="top-bt" aria-expanded="false" aria-controls="cfgbox" aria-label="Backup e opções do aplicativo">⚙️ Dados</button>
+      <button type="button" id="recolher" class="top-bt">Recolher ↘</button>
+    </div>
+  </header>
+  <section id="dicbox" aria-label="Dicionário"><div class="dicin"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="font-family:var(--f-display);font-size:18px">Dicionário</b><button type="button" id="dicx" aria-label="Fechar o dicionário" style="font:inherit;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;width:36px;height:36px;cursor:pointer">×</button></div><div id="dicmt"></div></div></section>
+  <section id="cfgbox" aria-label="Dados e backup"><div class="dicin"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><b style="font-family:var(--f-display);font-size:18px">Seus dados e Modo App</b><button type="button" id="cfgx" aria-label="Fechar painel de dados" style="font:inherit;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;width:36px;height:36px;cursor:pointer">×</button></div><p class="sub" style="margin:0">Suas anotações ficam salvas neste aparelho (offline) e você pode exportar ou restaurar um backup quando quiser.</p><div class="cfg-acts"><button type="button" id="bkp-exp" class="top-bt">↓ Baixar backup (.json)</button><button type="button" id="bkp-imp" class="top-bt">↑ Restaurar backup (.json)</button><input type="file" id="bkp-in" accept="application/json,.json" hidden><button type="button" id="modo-app-bt" class="top-bt">📱 Alternar Modo App</button></div><p id="cfg-msg" class="cfg-msg" hidden aria-live="polite"></p></div></section>
+  <div id="cad"></div>
+</div>
+<script src="./caderno-dados.js"></script>
+<script src="./caderno-livro.js"></script>
+<script src="./caderno-ui.js"></script>
+
+
+<script>window.UniCadernoTela = UniCadernoUI.montar(document.getElementById('cad'));</script>
+<script>
+/* Dicionário: abre em cima do caderno, sem sair da página; "Salvar" põe a palavra na anotação aberta */
+(function(){
+  var box=document.getElementById('dicbox'),bt=document.getElementById('dicbt'),dic=null;
+  function abre(v){
+    box.classList.toggle('on',v); bt.setAttribute('aria-expanded',String(v));
+    if(!v)return;
+    function fazer(){dic=UniDic.montar(document.getElementById('dicmt'),{salvar:function(l){window.UniCadernoTela.salvaLinha(l);}});dic.foca();}
+    if(dic)dic.foca(); else if(window.UniDic)fazer(); else{var s=document.createElement('script');s.src='./caderno-dic.js';s.onload=fazer;document.head.appendChild(s);}
+  }
+  bt.onclick=function(){abre(!box.classList.contains('on'));};
+  document.getElementById('dicx').onclick=function(){abre(false);bt.focus();};
+  box.addEventListener('keydown',function(e){e.stopPropagation();if(e.key==='Escape'){abre(false);bt.focus();}});
+})();
+</script>
+<script>
+/* Dados, backup JSON e alternância rápida do Modo App */
+(function(){
+  var box=document.getElementById('cfgbox'),bt=document.getElementById('cfgbt'),msg=document.getElementById('cfg-msg'),inF=document.getElementById('bkp-in');
+  function abre(v){box.classList.toggle('on',v);bt.setAttribute('aria-expanded',String(v));}
+  function avisa(t){msg.textContent=t;msg.hidden=false;setTimeout(function(){msg.hidden=true;},4500);}
+  bt.onclick=function(){abre(!box.classList.contains('on'));};
+  document.getElementById('cfgx').onclick=function(){abre(false);bt.focus();};
+  document.getElementById('bkp-exp').onclick=function(){
+    if(!window.UniCaderno||!window.UniCaderno.exportarBackup)return;
+    var bl=new Blob([window.UniCaderno.exportarBackup()],{type:'application/json'});
+    var a=document.createElement('a');a.href=URL.createObjectURL(bl);a.download='caderno-unirversos-backup-'+new Date().toISOString().slice(0,10)+'.json';
+    document.body.appendChild(a);a.click();a.remove();setTimeout(function(){URL.revokeObjectURL(a.href);},2000);
+    avisa('✓ Backup baixado com sucesso!');
+  };
+  document.getElementById('bkp-imp').onclick=function(){inF.value='';inF.click();};
+  inF.onchange=function(){
+    var f=inF.files&&inF.files[0];if(!f)return;
+    var r=new FileReader();
+    r.onload=function(){
+      try{var qtd=window.UniCaderno.importarBackup(r.result);avisa('✓ '+qtd+' anotações restauradas e mescladas!');}
+      catch(e){avisa('Não consegui ler esse arquivo de backup.');}
+    };
+    r.readAsText(f);
+  };
+  document.getElementById('modo-app-bt').onclick=function(){
+    document.body.classList.toggle('modo-app');
+    abre(false);
+  };
+})();
+</script>
+<script>
+/* Recolher: volta para a página de onde o caderno foi aberto (ou a anterior do site) e reabre o painel na mesma anotação */
+document.getElementById('recolher').onclick=function(){
+  var id=null,v=null;
+  try{id=window.UniCadernoTela.id();window.UniCaderno&&window.UniCaderno.agora&&window.UniCaderno.agora();v=JSON.parse(sessionStorage.getItem('uni-cf-volta')||'null');}catch(e){}
+  if(v&&v.u){try{sessionStorage.setItem('uni-cf-volta',JSON.stringify({u:v.u,id:id,r:1}));}catch(e){} location.href=v.u;return;}
+  try{if(document.referrer&&new URL(document.referrer).origin===location.origin&&history.length>1){history.back();return;}}catch(e){}
+  location.href='/idiomas/';
+};
+</script>
+<script>
+/* links antigos de "Caderno de palavras" (QR e #frases) agora vivem em Minhas palavras */
+(function(){var q=location.search,h=location.hash;if(/[?&]w=/.test(q)||h==='#frases')location.replace('/idiomas/palavras/'+q+h)})();
+</script>
+<script src="./app-nativo.js"></script>
+</body>
+</html>

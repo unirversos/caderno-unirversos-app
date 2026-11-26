@@ -1,0 +1,7 @@
+<?xml version='1.0' encoding='utf-8'?>
+<resources>
+    <string name="app_name">Caderno Unirversos</string>
+    <string name="title_activity_main">Caderno Unirversos</string>
+    <string name="package_name">com.unirversos.caderno</string>
+    <string name="custom_url_scheme">com.unirversos.caderno</string>
+</resources>
