@@ -39,17 +39,22 @@ h1{font-family:var(--f-display);font-weight:800;font-size:clamp(24px,5vw,34px);l
 .top-bt:focus-visible{outline:3px solid var(--lavender);outline-offset:2px}
 @media (max-width:480px){.top-bt{padding:8px 12px;font-size:13px}}
 /* Modo App (Standalone PWA / App Store / ?app=1): remove barras do site para parecer app nativo */
-body.modo-app .sitebar,body.modo-app .trail,body.modo-app #recolher,body.modo-app #bz-aba,body.modo-app #bz-p{display:none!important}
+body.modo-app .sitebar,body.modo-app .trail,body.modo-app #recolher,body.modo-app #appbt,body.modo-app #appbox,body.modo-app #bz-aba,body.modo-app #bz-p{display:none!important}
 body.modo-app .sub{display:none}
 body.modo-app{padding-top:max(14px,env(safe-area-inset-top,0px))}
-/* dicionário sanfonado e painel de dados */
-#dicbox,#cfgbox{display:grid;grid-template-rows:0fr;margin:0;transition:grid-template-rows .28s ease,margin .28s ease;visibility:hidden}
-#dicbox.on,#cfgbox.on{grid-template-rows:1fr;margin:0 0 14px;visibility:visible}
-#dicbox .dicin,#cfgbox .dicin{overflow:hidden;min-height:0;background:#fff;border:0 solid #ecdadd;border-radius:18px;padding:0 14px;transition:padding .28s ease}
-#dicbox.on .dicin,#cfgbox.on .dicin{border-width:1.5px;padding:14px}
+/* dicionário sanfonado, painel de dados e instalar app */
+#dicbox,#cfgbox,#appbox{display:grid;grid-template-rows:0fr;margin:0;transition:grid-template-rows .28s ease,margin .28s ease;visibility:hidden}
+#dicbox.on,#cfgbox.on,#appbox.on{grid-template-rows:1fr;margin:0 0 14px;visibility:visible}
+#dicbox .dicin,#cfgbox .dicin,#appbox .dicin{overflow:hidden;min-height:0;background:#fff;border:0 solid #ecdadd;border-radius:18px;padding:0 14px;transition:padding .28s ease}
+#dicbox.on .dicin,#cfgbox.on .dicin,#appbox.on .dicin{border-width:1.5px;padding:14px}
 .cfg-acts{display:flex;flex-wrap:wrap;gap:8px;margin-top:8px}
 .cfg-msg{font-size:13px;color:var(--sage);font-weight:700;margin:8px 0 0}
-@media (prefers-reduced-motion:reduce){#dicbox,#dicbox .dicin,#cfgbox,#cfgbox .dicin{transition:none}}
+.app-grid{display:grid;grid-template-columns:repeat(auto-fit,minmax(230px,1fr));gap:10px;margin-top:10px}
+.app-card{border:1.5px solid var(--line);border-radius:14px;padding:12px;background:var(--paper)}
+.app-card h3{margin:0 0 4px;font-family:var(--f-display);font-size:16px}
+.app-card p{margin:0 0 8px;font-size:13.5px;color:var(--muted)}
+.app-card a.top-bt{text-decoration:none}
+@media (prefers-reduced-motion:reduce){#dicbox,#dicbox .dicin,#cfgbox,#cfgbox .dicin,#appbox,#appbox .dicin{transition:none}}
 </style>
 <link rel="stylesheet" href="./estilo-celular.css">
 
@@ -75,11 +80,13 @@ body.modo-app{padding-top:max(14px,env(safe-area-inset-top,0px))}
     </div>
     <div class="top-acts">
       <button type="button" id="dicbt" class="top-bt" aria-expanded="false" aria-controls="dicbox">📖 Dicionário</button>
+      <button type="button" id="appbt" class="top-bt" aria-expanded="false" aria-controls="appbox">📲 Baixar App</button>
       <button type="button" id="cfgbt" class="top-bt" aria-expanded="false" aria-controls="cfgbox" aria-label="Backup e opções do aplicativo">⚙️ Dados</button>
       <button type="button" id="recolher" class="top-bt">Recolher ↘</button>
     </div>
   </header>
   <section id="dicbox" aria-label="Dicionário"><div class="dicin"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:8px"><b style="font-family:var(--f-display);font-size:18px">Dicionário</b><button type="button" id="dicx" aria-label="Fechar o dicionário" style="font:inherit;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;width:36px;height:36px;cursor:pointer">×</button></div><div id="dicmt"></div></div></section>
+  <section id="appbox" aria-label="Instalar aplicativo"><div class="dicin"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><b style="font-family:var(--f-display);font-size:18px">Instalar o Caderno Unirversos (grátis)</b><button type="button" id="appx" aria-label="Fechar painel de instalação" style="font:inherit;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;width:36px;height:36px;cursor:pointer">×</button></div><p class="sub" style="margin:0">Use em tela cheia no celular ou tablet, 100% offline e gratuito.</p><div class="app-grid"><div class="app-card"><h3>🤖 Android</h3><p>Baixe o aplicativo nativo (.apk) ou instale direto pelo navegador.</p><div class="cfg-acts"><a href="./Caderno-Unirversos.apk" download class="top-bt">↓ Baixar APK (Android)</a><button type="button" id="pwa-inst" class="top-bt" hidden>⚡ Instalar direto</button></div></div><div class="app-card"><h3>🍎 iPhone e iPad</h3><p>No <b>Safari</b>, toque no botão <b>Compartilhar (⬆️)</b> na barra inferior e escolha <b>“Adicionar à Tela de Início”</b>.</p></div></div></div></section>
   <section id="cfgbox" aria-label="Dados e backup"><div class="dicin"><div style="display:flex;justify-content:space-between;align-items:center;margin-bottom:4px"><b style="font-family:var(--f-display);font-size:18px">Seus dados e Modo App</b><button type="button" id="cfgx" aria-label="Fechar painel de dados" style="font:inherit;border:1.5px solid #ecdadd;background:#fff;border-radius:99px;width:36px;height:36px;cursor:pointer">×</button></div><p class="sub" style="margin:0">Suas anotações ficam salvas neste aparelho (offline) e você pode exportar ou restaurar um backup quando quiser.</p><div class="cfg-acts"><button type="button" id="bkp-exp" class="top-bt">↓ Baixar backup (.json)</button><button type="button" id="bkp-imp" class="top-bt">↑ Restaurar backup (.json)</button><input type="file" id="bkp-in" accept="application/json,.json" hidden><button type="button" id="modo-app-bt" class="top-bt">📱 Alternar Modo App</button></div><p id="cfg-msg" class="cfg-msg" hidden aria-live="polite"></p></div></section>
   <div id="cad"></div>
 </div>
@@ -148,6 +155,25 @@ document.getElementById('recolher').onclick=function(){
 <script>
 /* links antigos de "Caderno de palavras" (QR e #frases) agora vivem em Minhas palavras */
 (function(){var q=location.search,h=location.hash;if(/[?&]w=/.test(q)||h==='#frases')location.replace('/idiomas/palavras/'+q+h)})();
+</script>
+<script>
+/* Painel Baixar App (APK Android + PWA 1 toque + guia iOS) */
+(function(){
+  var box=document.getElementById('appbox'),bt=document.getElementById('appbt'),pwaBt=document.getElementById('pwa-inst'),evInst=null;
+  if(!box||!bt)return;
+  function abre(v){box.classList.toggle('on',v);bt.setAttribute('aria-expanded',String(v));}
+  bt.onclick=function(){abre(!box.classList.contains('on'));};
+  document.getElementById('appx').onclick=function(){abre(false);bt.focus();};
+  window.addEventListener('beforeinstallprompt',function(e){
+    e.preventDefault(); evInst=e;
+    if(pwaBt) pwaBt.hidden=false;
+  });
+  if(pwaBt) pwaBt.onclick=function(){
+    if(!evInst)return;
+    evInst.prompt();
+    evInst.userChoice.finally(function(){evInst=null;pwaBt.hidden=true;});
+  };
+})();
 </script>
 <script src="./app-nativo.js"></script>
 </body>

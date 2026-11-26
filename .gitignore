@@ -11,6 +11,8 @@ android/local.properties
 android/.idea/
 *.keystore
 *.jks
+*.apk
+*.zip
 
 # iOS build outputs
 ios/DerivedData/

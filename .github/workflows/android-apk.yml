@@ -32,7 +32,24 @@ jobs:
       - name: Sincronizar Capacitor Android
         run: npx cap sync android
 
-      - name: Compilar APK instalável
+      - name: Compilar APK Release Assinado (Galaxy Store / Amazon / Site)
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 != '' }}
+        working-directory: android
+        env:
+          ANDROID_KEYSTORE_BASE64: ${{ secrets.ANDROID_KEYSTORE_BASE64 }}
+          KEYSTORE_PATH: /tmp/caderno-release.jks
+          KEYSTORE_PASSWORD: ${{ secrets.ANDROID_KEYSTORE_PASSWORD }}
+          KEY_ALIAS: ${{ secrets.ANDROID_KEY_ALIAS }}
+          KEY_PASSWORD: ${{ secrets.ANDROID_KEY_PASSWORD }}
+        run: |
+          echo "$ANDROID_KEYSTORE_BASE64" | base64 -d > "$KEYSTORE_PATH"
+          chmod +x gradlew
+          ./gradlew assembleRelease
+          cp app/build/outputs/apk/release/app-release.apk ../Caderno-Unirversos.apk
+          rm -f "$KEYSTORE_PATH"
+
+      - name: Compilar APK de Teste (sem chave release configurada ainda)
+        if: ${{ secrets.ANDROID_KEYSTORE_BASE64 == '' }}
         working-directory: android
         run: |
           chmod +x gradlew
